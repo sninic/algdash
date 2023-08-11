@@ -1,0 +1,383 @@
+{% extends "base.html" %} {% block title %}Practice{% endblock %} {% block
+content %}
+<div class="pt-5">
+	<h1 align="center">Practice</h1>
+	<head>
+		<style>
+			span.cm-meta {
+				color: rgb(7, 32, 170);
+			}
+			span.cm-keyword {
+				color: #f87683;
+			}
+			span.cm-atom {
+				color: rgb(88, 92, 246);
+			}
+			span.cm-number {
+				color: #79b8ff;
+			}
+			span.cm-def {
+				color: #b392f0;
+			}
+			span.cm-variable {
+				color: #cdcfd3;
+			}
+			span.cm-variable-2 {
+				color: rgb(85, 148, 164);
+			}
+			span.cm-variable-3 {
+				color: rgb(16, 51, 246);
+			}
+			span.cm-property {
+				color: #cdcfd3;
+			}
+			span.cm-operator {
+				color: #f87683;
+			}
+			span.cm-comment {
+				color: rgb(112, 112, 112);
+			}
+			span.cm-string {
+				color: rgb(49, 120, 33);
+			}
+			span.cm-string-2 {
+				color: rgb(193, 52, 32);
+			}
+			span.cm-error {
+				color: #f00;
+			}
+			span.cm-qualifier {
+				color: #555;
+			}
+			span.cm-builtin {
+				color: rgb(109, 119, 240);
+			}
+			span.cm-bracket {
+				color: #cc7;
+			}
+			span.cm-tag {
+				color: rgb(16, 51, 246);
+			}
+			span.cm-attribute {
+				color: #036a07;
+			}
+		</style>
+
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+			.scrollbar {
+				height: 300px;
+				width: 50%;
+				overflow: auto;
+				padding: 0 10px;
+			}
+			.description::-webkit-scrollbar,
+			.right::-webkit-scrollbar,
+			.items::-webkit-scrollbar {
+				width: 12px;
+			}
+
+			.description::-webkit-scrollbar-track,
+			.right::-webkit-scrollbar-track,
+			.items::-webkit-scrollbar-track {
+				border-radius: 8px;
+				background-color: #24292f;
+				border: 1px solid #1f242a;
+				box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+			}
+
+			.description::-webkit-scrollbar-thumb,
+			.right::-webkit-scrollbar-thumb,
+			.right::-webkit-scrollbar-thumb {
+				border-radius: 8px;
+				background-color: #3d4755;
+				border: 1px solid #1e2228;
+				box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+			}
+			.description::-webkit-scrollbar-corner,
+			.right::-webkit-scrollbar-corner,
+			.items::-webkit-scrollbar-corner {
+				background-color: transparent;
+			}
+			h1 {
+				color: chocolate;
+			}
+			.check-btn {
+				margin:  10px 0 5px 30px;
+				border: 3px solid rgb(49, 49, 49);
+				border-radius: 5px;
+				padding: 0 10px;
+				background-color: rgb(60, 60, 60);
+				color: aliceblue;
+			}
+			.filter-btn {
+				margin:  10px 0 5px 5px;
+				border: 3px solid rgb(49, 49, 49);
+				border-radius: 5px;
+				padding: 0 10px;
+				background-color: rgb(60, 60, 60);
+				color: aliceblue;
+			}
+			.description,
+			#left,
+			.right {
+				position: relative;
+				margin: 3% 1%;
+				border: 3px;
+				height: 700px;
+				padding: 10px;
+				border-radius: 10px;
+				background: #24292f !important;
+				color: aliceblue;
+				z-index: 0;
+			}
+			.left {
+				width: fit-content;
+				white-space: break-spaces;
+			}
+			.description,
+			.right {
+				overflow-x: scroll;
+			}
+
+			.list {
+				display: inline-flex;
+				position: relative;
+				font-family: monospace;
+				margin: 3px;
+				padding-left: 2px;
+				background: #1f2429;
+				border: 2px solid #15181b;
+				box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+				border-radius: 5px;
+				color: aliceblue;
+				text-align: left;
+				vertical-align: center;
+				width: fit-content;
+				perspective: 1px;
+				z-index: 1;
+				word-wrap: inherit;
+				white-space: inherit;
+				word-break: normal;
+			}
+
+			#zones {
+				margin-left: 54px;
+			}
+			.zone {
+				height: 34px;
+				width: 36px;
+				margin-right: -1px;
+				margin-top: -10px;
+				margin-bottom: -10px;
+				overflow: visible;
+				display: inline-block;
+				/* {# border: 2px solid rgb(162, 18, 18); #} */
+				white-space: nowrap;
+			}
+			.zone.over {
+				border-left: 2px solid #3bd5ff;
+			}
+			.code-line {
+				height: fit-content;
+				margin: 0 0px;
+				padding: 5px;
+				font-family: monospace;
+				word-break: normal;
+			}
+			.pres {
+				color: #cdcfd3;
+				overflow: visible;
+				margin: 1px;
+				word-break: normal;
+			}
+			pre {
+				color: #cdcfd3;
+			}
+		</style>
+		<style>
+			.dropdown-check-list {
+				display: inline-block;
+			}
+
+			.dropdown-check-list .anchor {
+				width: fit-content;
+				position: relative;
+				cursor: pointer;
+				display: inline-block;
+				color: aliceblue;
+				padding: 5px 60px 5px 20px;
+				background-color: #24292f;
+				border: 2px solid #8ba0c0;
+				border-radius: 3px;
+			}
+
+			.dropdown-check-list .anchor:after {
+				position: absolute;
+				content: "";
+				border-left: 2px solid aliceblue;
+				border-top: 2px solid aliceblue;
+				padding: 5px;
+				right: 10px;
+				top: 20%;
+				-moz-transform: rotate(-135deg);
+				-ms-transform: rotate(-135deg);
+				-o-transform: rotate(-135deg);
+				-webkit-transform: rotate(-135deg);
+				transform: rotate(-135deg);
+			}
+
+			.dropdown-check-list .anchor:active:after {
+				right: 8px;
+				top: 21%;
+			}
+
+			.dropdown-check-list ul.items {
+				width: 500px;
+				max-height: 500px;
+				padding: 2px;
+				display: none;
+				margin: 0;
+				border: 2px solid #8ba0c0;
+				border-radius: 8px;
+				border-top: none;
+				overflow-y: scroll;
+			}
+
+			.dropdown-check-list ul.items li {
+				display: inline-block;
+				height: fit-content;
+				width: fit-content;
+				margin: 3px;
+				padding: 2px 5px;
+				list-style: none;
+				background-color: #24292f;
+				border: 2px solid #8ba0c0;
+				border-radius: 8px;
+			}
+			.dropdown-check-list ul.items .tag {
+				display: inline-block;
+			}
+			.dropdown-check-list ul.items #myInput {
+				color: #8ba0c0;
+				margin: 10px 5px 10px 5px;
+				background-color: #24292f;
+				border: 2px solid #010102;
+				border-radius: 2px;
+				width: 95%;
+				display: block;
+			}
+			.dropdown-check-list ul.items button {
+				display: block;
+			}
+			.dropdown-check-list.visible .anchor {
+				color: #d4e2eb;
+			}
+
+			.dropdown-check-list.visible .items {
+				display: block;
+			}
+			.tag:checked {
+				background-color: #8ba0c0;
+			}
+		</style>
+		<script
+			type="text/javascript"
+			src="{{ url_for('static', filename='index.js')}}"></script>
+	</head>
+
+	<body class="problem">
+		<div class="row gx-0">
+			<h2 style="margin-left: 5%">{{problem.problem_name}}</h2>
+			<div
+				id="list1"
+				class="dropdown-check-list"
+				tabindex="100"
+				style="margin-left: 50%">
+				<span class="anchor"> Select Tags</span>
+				<ul class="items">
+					<input
+						type="text"
+						placeholder="Search.."
+						id="myInput"
+						onkeyup="filterSearch()" />
+					{%- for tag in problem_tags -%}
+					<li>
+						<input class="tag" type="checkbox" value="{{ tag }}" />{{ tag }}
+					</li>
+					{%- endfor -%}
+					<button class="filter-btn" onclick="filterProblem();">Filter</button>
+				</ul>
+			</div>
+		</div>
+		<script>
+			initCheckList("{{ cur_filter | safe }}");
+		</script>
+		<div class="row gx-0">
+			<div class="col-xl-4">
+				<div class="description">
+					<h3 class="heading">Description</h3>
+					<div id="description"></div>
+				</div>
+			</div>
+			<div class="col-xl-3">
+				<div id="left">
+					{%- set idx = namespace(value=0) -%}{%- for option in problem.options
+					-%}{%- if option | length != 0 -%}
+					<div class="list list-{{ idx.value }}" id="n/a" draggable="true">
+						<span class="pres" role="presentation" style="padding-right: 0.5px">
+							{%- for span in option -%}{%- if span[1] == "cm-reg" -%}{{
+							span[0]}}{%- else -%}
+							<span class="{{ span[1] }}">{{ unEscape(span[0])}}</span>
+							{%- endif -%}{%- endfor -%}
+						</span>
+					</div>
+					{%- set idx.value = idx.value + 1 -%}{%- endif -%}{%- endfor -%}
+				</div>
+			</div>
+			<div class="col-xl-5">
+				<div class="right">
+					{%- set idx = namespace(value=0) -%}{%- for line in problem.code -%}
+					<div class="code-line" style="position: relative">
+						{%- if line is string -%}
+						<div id="zones">
+							{%- for i in range(line | int) -%}
+							<div
+								class="zone"
+								id="zone-{{ idx.value }}"
+								style="z-index: 2; position: relative"></div>
+							{%- set idx.value = idx.value + 1 -%}{%- endfor -%}
+						</div>
+						{%- else -%}{%- for span in line -%}
+						<span class="{{ span[1] }}">{{ unEscape(span[0])}}</span>
+						{%- endfor -%}{%- endif -%}
+					</div>
+					{%- endfor -%}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xl-7"></div>
+			<button
+				class="check-btn"
+				id="check"
+				onclick="checkAnswer('{{ problem.answer }}', '{{ problem.id }}')">
+				Check <i class="material-icons">check</i>
+			</button>
+		</div>
+		<script>
+			result = stringToHTML(unEscape(`{{ problem.description }}`));
+			document.getElementById("description").innerHTML += unEscape(
+				result.innerHTML.trim('"')
+			);
+			var left = document.getElementById("left");
+			for (var i = left.children.length; i >= 0; i--) {
+				left.appendChild(left.children[(Math.random() * i) | 0]);
+			}
+			initDrag("{{ idx.value }}");
+		</script>
+	</body>
+</div>
+{% endblock %}

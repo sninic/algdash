@@ -1,0 +1,253 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
+content %}
+<body>
+	<style>
+		h1 {
+			margin-right: 30%;
+			float: right;
+			color: chocolate;
+		}
+		.drop-select {
+			float: left;
+		}
+		.row {
+			margin: 10px auto;
+			padding: 20px;
+			height: 100%;
+			width: 90%;
+		}
+		table {
+			width: 100%;
+		}
+
+		table,
+		th,
+		td {
+			text-align: center;
+			border-bottom: 1px solid #0a0909;
+			color: aliceblue;
+		}
+		table {
+			background-color: rgb(60, 60, 60);
+		}
+		tr:nth-child(even) {
+			background-color: rgb(50, 50, 50);
+		}
+	</style>
+	<style>
+		.scrollbar {
+			height: 300px;
+			width: 50%;
+			overflow: auto;
+			padding: 0 10px;
+		}
+
+		.items::-webkit-scrollbar {
+			width: 12px;
+		}
+
+		.items::-webkit-scrollbar-track {
+			border-radius: 8px;
+			background-color: #24292f;
+			border: 1px solid #1f242a;
+			box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+		}
+
+		.right::-webkit-scrollbar-thumb {
+			border-radius: 8px;
+			background-color: #3d4755;
+			border: 1px solid #1e2228;
+			box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+		}
+
+		.items::-webkit-scrollbar-corner {
+			background-color: transparent;
+		}
+		.dropdown-check-list {
+			display: inline-block;
+		}
+
+		.dropdown-check-list .anchor {
+			width: fit-content;
+			position: relative;
+			cursor: pointer;
+			display: inline-block;
+			color: aliceblue;
+			padding: 5px 60px 5px 20px;
+			background-color: #24292f;
+			border: 2px solid #8ba0c0;
+			border-radius: 3px;
+		}
+
+		.dropdown-check-list .anchor:after {
+			position: absolute;
+			content: "";
+			border-left: 2px solid aliceblue;
+			border-top: 2px solid aliceblue;
+			padding: 5px;
+			right: 10px;
+			top: 20%;
+			-moz-transform: rotate(-135deg);
+			-ms-transform: rotate(-135deg);
+			-o-transform: rotate(-135deg);
+			-webkit-transform: rotate(-135deg);
+			transform: rotate(-135deg);
+		}
+
+		.dropdown-check-list .anchor:active:after {
+			right: 8px;
+			top: 21%;
+		}
+
+		.dropdown-check-list ul.items {
+			width: 300px;
+			max-height: 500px;
+			padding: 2px;
+			display: none;
+			margin: 0;
+			border: 2px solid #8ba0c0;
+			border-radius: 8px;
+			border-top: none;
+			overflow-y: scroll;
+		}
+
+		.dropdown-check-list ul.items li {
+			display: inline-block;
+			height: fit-content;
+			width: fit-content;
+			margin: 3px;
+			padding: 2px 5px;
+			list-style: none;
+			background-color: #24292f;
+			border: 2px solid #8ba0c0;
+			border-radius: 8px;
+		}
+		.dropdown-check-list ul.items .tag {
+			display: inline-block;
+		}
+		.dropdown-check-list ul.items #myInput {
+			color: #8ba0c0;
+			margin: 10px 5px 10px 5px;
+			background-color: #24292f;
+			border: 2px solid #010102;
+			border-radius: 2px;
+			width: 95%;
+			display: block;
+		}
+		.dropdown-check-list ul.items button {
+			display: block;
+		}
+		.dropdown-check-list.visible .anchor {
+			color: #d4e2eb;
+		}
+
+		.dropdown-check-list.visible .items {
+			display: block;
+		}
+		.tag:checked {
+			background-color: #8ba0c0;
+		}
+	</style>
+	<script
+		type="text/javascript"
+		src="{{ url_for('static', filename='index.js')}}"></script>
+	<div class="pt-5">
+		<div class="row">
+			<div
+				id="list1"
+				class="dropdown-check-list"
+				tabindex="100">
+				<span class="anchor">Select Tags</span>
+				<ul class="items">
+					<input
+						type="text"
+						placeholder="Search.."
+						id="myInput"
+						onkeyup="filterSearch()" />
+					{%- for tag in problem_tags -%}
+					<li>
+						<input
+							class="tag"
+							type="checkbox"
+							value="{{ tag }}" />{{ tag }}
+					</li>
+					{%- endfor -%}
+					<button
+						class="filter-btn"
+						onclick="filterTable()">
+						Filter
+					</button>
+				</ul>
+			</div>
+		</div>
+		<script>
+			initCheckList("{{ cur_filter | safe }}");
+		</script>
+		<div class="row">
+			<table
+				class="table table-striped"
+				style="width: 100%"
+				float="center">
+				<tr>
+					<th>Problem</th>
+					<th>Date</th>
+					<th>Right/Wrong</th>
+				</tr>
+				{% for problem in problems%}
+				<tr>
+					<td>{{problem.problem_name}}</td>
+					<td id="date">{{ timeAgo(problem.date) }}</td>
+					{% if problem.correct == true %}
+					<td>
+						<i
+							class="material-icons"
+							style="color: chartreuse">
+							check_circle
+						</i>
+					</td>
+					{% else %}
+					<td>
+						<i
+							class="material-icons"
+							style="color: crimson">
+							cancel
+						</i>
+					</td>
+					{% endif %}
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+		<!-- <row class="row">
+			<h1 align="center">{{user.first_name}}'s Dashboard</h1>
+			<div class="drop-select">
+				<select
+					name="cars"
+					id="cars"
+					multiple
+					multiselect-max-items="3">
+					<option value="1">Audi</option>
+					<option
+						selected
+						value="2">
+						BMW
+					</option>
+					<option
+						selected
+						value="3">
+						Mercedes
+					</option>
+					<option value="4">Volvo</option>
+					<option value="5">Lexus</option>
+					<option value="6">Tesla</option>
+				</select>
+			</div>
+		</row>
+		<br />
+		<row class="row">
+			
+		</row> -->
+	</div>
+</body>
+
+{% endblock %}
