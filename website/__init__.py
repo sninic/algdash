@@ -8,11 +8,17 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 DB_NAME = "algdash"
+SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+    username="sninic2",
+    password="Cavalier04.anywhere",
+    hostname="sninic2.mysql.pythonanywhere-services.com",
+    databasename="sninic2$algdash",
+)
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'bruh'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://root:Cavalier04.Mysql!@localhost/{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
     db.init_app(app)
     
 
