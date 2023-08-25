@@ -1,5 +1,6 @@
 
 # AlgDash - http://sninic2.pythonanywhere.com/
+*site may to be refreshed when going to link*
 
 AlgDash is a web application crafted to offer users a more streamlined approach to honing their skills for technical interviews. While it doesn't aim to supplant platforms like LeetCode, its purpose is to complement them. AlgDash serves as an invaluable companion, particularly in situations where executing complete coded solutions might be impractical – think of it as your go-to resource for practicing on the fly or during time-constrained scenarios. Through its intuitive drag-and-drop interface, AlgDash empowers users to engage in numerous iterations of problem-solving, facilitating rapid comprehension of prompts and fostering enhanced practice.
 
